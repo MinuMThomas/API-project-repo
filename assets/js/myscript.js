@@ -68,3 +68,124 @@ async function getStatus(e) {
     }
 }                    
 
+document.getElementById("status").addEventListener("click", e => getStatus(e));
+document.getElementById("submit").addEventListener("click", e => postForm(e));
+
+async function postForm(e) {
+// Firstly, a function to make the request. And secondly, a function to display the data.
+// So, let’s start by wiring up our Run Checks  button, and then we’ll have a look at the  
+// instructions and see what we need to do. Our function this time, will be called postForm
+// because that’s what we’re doing  - we’re POSTing the form to the API. 
+// you’ll need to check the ID of  the Run Checks button in the HTML code.
+// How did you get on?
+// Well here’s the code to wire up our Run Checks button.
+// As you can see, it's very similar  to our previous event listener.
+// Ok, so let’s go back to the API instructions  and we'll see how to make a POST request.
+// the names of the different fields on our form  
+// correspond to these parameter names. So, we're going to need to do two things. 
+// Firstly, get the form data  and then post it to the API.
+// So what I'm just going to do first, is copy  this code fragment here. I'm going to copy it  
+// because I want to paste it into my function  later on, we will make some changes to it.  
+const form = new FormData (document.getElementById("checksform"));
+
+
+                // for (let e of form.entries()) {
+                //     console.log(e);
+                // }
+
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": API_KEY,
+                    },
+                    body: form,
+                });  
+                
+                
+    const data = await response.json();
+
+    if (response.ok) {
+        displayErrors(data);
+    } else {
+        throw new Error(data.error);
+    }
+}
+
+async function getStatus(e) {
+
+    const queryString = `${API_URL}?api_key=${API_KEY}`;
+
+    const response = await fetch(queryString);
+
+    const data = await response.json();
+
+    if (response.ok) {
+        console.log(data.expiry);
+    } else {
+        throw new Error (data.error);
+    }
+}
+
+function displayStatus(data){
+        // set the  heading text to API key status  
+        // I set the results variable to the content that  I want in the body using template literals.  
+        // Then using document.getElementById and the  IDs I gave you earlier I set the content.  
+        // And finally, the results modal is shown
+    let heading = "API Key Status";
+    let results = `<div>Your key is valid until</div>`;
+    results += `<div class="key-status">${data.expiry}</div>`;
+
+    document.getElementById("resultsModalTitle").innerText = heading;
+    document.getElementById("results-content").innerHTML = results;
+    resultsModal.show();
+}
+
+
+
+
+function displayErrors(data) {
+
+    let results = "";
+
+    let heading = `JSHint Results for ${data.file}`;
+    if (data.total_errors === 0) {
+        results = `<div class="no_errors">No errors reported!</div>`;
+    } else {
+        results = `<div>Total Errors: <span class="error_count">${data.total_errors}</span></div>`;
+        for (let error of data.error_list) {
+            results += `<div>At line <span class="line">${error.line}</span>, `;
+            results += `column <span class="column">${error.col}:</span></div>`;
+            results += `<div class="error">${error.error}</div>`;
+        }
+    }
+
+    document.getElementById("resultsModalTitle").innerText = heading;
+    document.getElementById("results-content").innerHTML = results;
+    resultsModal.show();
+}
+// create a template literal this  time and give the heading of 'JShint Results for'  
+// and then we're going to pick up the  file value from our return to json.
+// Now we can have an if statement if the total  number of errors that have been returned is  
+// equal to zero. Then, we're just going to set  our results variable here to a div.   
+// We'll give it a class of no errors; we're not actually  styling these classes at the moment but it's  
+// handy to have them there in case we wanted to.  And we're just going to say no errors reported.
+// If, however our total errors count is more  than zero then we have errors. So let's set  
+// our results variable again. Again, we're using  template literals here. So the first line  
+// is going to say 'Total Errors',  
+// we'll create a span with a class here so that  we could format it if we wanted to in our CSS.
+// And then we'll pass in the error count  that's coming in here from our data object.
+// Okay so 'Total Errors', all right. And now we'll  iterate through each of those errors.   
+// So we'll say, 'for let error of data.error_list' and  if you're wondering where I'm getting these  
+// names from you can check back  in the json that was returned  
+// in the console to see exactly where  all of these key names are coming from. 
+// But what we're going to do is first of all, report  the line number where these errors are happening.  
+// And also JShint conveniently reports the column  number as well. So I'm just going to put a comma,  
+// delete this closing div, because we want it to be  our lines and our columns to be in the same one.
+// And then, we're going to say  column. Again, we'll put in just a  
+// span with a class here in case we wanted  to add some color or some different text  
+// formatting to it. And we'll pass in the column  number. And then finally, we'll close that div.
+// We'll add one more line onto  our results variable here,  
+// which is going to be another template literal.  And we'll give it the class here of error  
+// and then we'll actually pass in the error  text that's coming back from our json.
+// Okay, so that's the content created,  what I'd like you to do now is pause  
+// the video and add three lines of code. I  want you to set the heading in the modal
