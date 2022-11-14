@@ -189,3 +189,12 @@ function displayErrors(data) {
 // and then we'll actually pass in the error  text that's coming back from our json.
 // Okay, so that's the content created,  what I'd like you to do now is pause  
 // the video and add three lines of code. I  want you to set the heading in the modal
+
+
+function chcapterInShort {
+    // why APIs are necessary for  modern web development,  
+    // learned about the json format, and how most modern APIs  have the option to return data in that format. 
+//  developed skills with JavaScript  fetch, received first API key  
+// and used both the POST and GET methods to interact  with an API. There's a lot of information here but  
+
+}
